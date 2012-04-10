@@ -2,7 +2,7 @@ import ply.lex as lex
 import ply.yacc as yacc
 import re
 from lxml.cssselect import CSSSelector
-from lxml.etree import fromstring
+from lxml.html import html5parser
 
 ###############################
 # Lex                         #
@@ -183,9 +183,9 @@ tokens.append('HASH')
 def t_HASH(t): return t
 t_HASH.__doc__ = r'\#{0}'.format(name)
 
-tokens.append('ATKEYWORD')
-def t_ATKEYWORD(t): return t
-t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
+#tokens.append('ATKEYWORD')
+#def t_ATKEYWORD(t): return t
+#t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
 
 tokens.append('DIMENSION')
 def t_DIMENSION(t): return t
@@ -248,8 +248,6 @@ while True:
 
 
 
-
-
 ###############################
 # Yacc                        #
 ###############################
@@ -294,31 +292,35 @@ def p_statements(p):
 
 def p_statement(p):
     """statement : ruleset
-                 | at-rule
     """
+    #            | at-rule
     p[0] = p[1]
     print 'FOUND STATEMENT: {0:s}'.format(p[0])
 
-def p_at_rule(p):
-    """at-rule : ATKEYWORD anys block
-               | ATKEYWORD anys ';'"""
-    p[0] = p[1] + p[2] + p[3] + p[4]
-    print 'FOUND AT RULE: {0:s}'.format(p[0])
 
-def p_block(p):
-    """block : '{' block_term '}'"""
-    p[0] = p[1] + p[2] + p[3]
-    print 'FOUND BLOCK: {0:s}'.format(p[0])
-    blocks.append(p[0])
+#def p_at_rule(p):
+#    """at-rule : ATKEYWORD anys block
+#               | ATKEYWORD anys ';'
+#    """
+#    p[0] = reduce(lambda x, y: x+y, p[1:])
+#    print 'FOUND AT RULE: {0:s}'.format(p[0])
 
-def p_block_term(p):
-    """block_term : any
-                  | block
-                  | ATKEYWORD
-                  | ';'
-    """
-    p[0] = reduce(lambda x, y: x+y, p[1:])
-    print 'FOUND BLOCK TERM: {0:s}'.format(p[0])
+#def p_block(p):
+#    """block : '{' block_term '}'
+#             | '{' '}'
+#    """
+#    p[0] = reduce(lambda x, y: x+y, p[1:])
+#    print 'FOUND BLOCK: {0:s}'.format(p[0])
+#    blocks.append(p[0])
+
+#def p_block_term(p):
+#    """block_term : any
+#                  | block
+#                  | ATKEYWORD
+#                  | ';'
+#    """
+#    p[0] = reduce(lambda x, y: x+y, p[1:])
+#    print 'FOUND BLOCK TERM: {0:s}'.format(p[0])
 
 def p_ruleset(p):
     """ruleset : selector_group '{' declarations '}'
@@ -330,10 +332,6 @@ def p_ruleset(p):
         selectors.append(p[1])
     p[0] = reduce(lambda x, y: x+y, p[1:])
     print 'FOUND RULESET: {0:s}'.format(p[0])
-
-#def p_selector(p):
-#    """selector : anys"""
-#    pass
 
 def p_declarations(p):
     """declarations : declaration ';' declarations
@@ -609,7 +607,7 @@ while 1:
     yacc.parse(s)
 """
 
-f = open('example/style.css')
+f = open('example/atkeyword.css')
 contents = f.read()
 yacc.parse(contents)
 
@@ -620,14 +618,16 @@ for s in selectors:
 sel = CSSSelector('div#container')
 print sel
 
+
+"""
 html_file = open('example/index.html')
 html = html_file.read()
 
-h = fromstring(html)
-
+h = html5parser.fromstring(html)
 print sel(h)
 
 
 
 for b in blocks:
     print b
+"""
