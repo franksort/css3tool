@@ -236,7 +236,7 @@ def t_error(t):
 lex.lex(reflags=re.IGNORECASE, debug=1)
 
 
-f = open('css/style2.css')
+f = open('example/style.css')
 contents = f.read()
 lex.input(contents)
 #lex.input('url(imgs/face01.gif)')
@@ -250,12 +250,12 @@ while True:
 
 
 
-
 ###############################
 # Yacc                        #
 ###############################
 
 
+blocks = []
 selectors = []
 
 ### Ya know, stylesheet stuff.  The rest of it.
@@ -309,6 +309,7 @@ def p_block(p):
     """block : '{' block_term '}'"""
     p[0] = p[1] + p[2] + p[3]
     print 'FOUND BLOCK: {0:s}'.format(p[0])
+    blocks.append(p[0])
 
 def p_block_term(p):
     """block_term : any
@@ -608,7 +609,7 @@ while 1:
     yacc.parse(s)
 """
 
-f = open('css/style2.css')
+f = open('example/style.css')
 contents = f.read()
 yacc.parse(contents)
 
@@ -619,9 +620,14 @@ for s in selectors:
 sel = CSSSelector('div#container')
 print sel
 
-html_file = open('html/index.html')
+html_file = open('example/index.html')
 html = html_file.read()
 
 h = fromstring(html)
 
 print sel(h)
+
+
+
+for b in blocks:
+    print b
