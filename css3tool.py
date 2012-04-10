@@ -195,6 +195,7 @@ tokens.append('PERCENTAGE')
 def t_PERCENTAGE(t): return t
 t_PERCENTAGE.__doc__ = r'{0}\%'.format(num)
 
+
 ### Comments
 ###
 
