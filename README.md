@@ -12,8 +12,9 @@ which selectors aren't being used.
 Installation
 ------------
 
-css3tool requires Python (some version) and lxml.
+css3tool requires Python (some version), ply, and lxml.
 
+    pip install ply
     pip install lxml
     git clone <project>
 
@@ -22,7 +23,7 @@ Usage
 
 I don't know yet.  Maybe:
 
-    ./css3tool.py --unused <css file> <html file>
+    python css3tool.py --unused <css file> <html file>
 
 Contributing
 ------------
