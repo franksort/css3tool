@@ -1,0 +1,38 @@
+@media print {
+    body {
+        font-size: 10pt;
+    }
+}
+
+@media screen {
+    body {
+        font-size: 12px;
+    }
+}
+
+body {
+    font-family: Helvetica, sans-serif;
+    font-size: 1em;
+    background-color: #fff;
+    color: #000;
+}
+
+h1 {
+    font-size: 2em;
+    color: #69c;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #888;
+}
+
+#container {
+    width: 80%;
+    margin: 0 auto 0 auto;
+}
+
+#notused {
+    background-color: #000;
+    font-size: 20px;
+}
