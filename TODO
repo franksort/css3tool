@@ -1,0 +1,17 @@
+Add Support for At-rules
+
+    From http://www.w3.org/TR/css3-syntax:
+
+        IMPORT_SYM = r'\@import'
+        PAGE_SYM = r'\@page'
+        MEDIA_SYM = r'\@media'
+        FONT_FACE_SYM = r'\@font-face'
+        CHARSET_SYM = r'\@charset'
+        NAMESPACE_SYM = r'\@namespace'
+
+    There's a specification for CSS3 Media Queries located here:
+    http://www.w3.org/TR/css3-mediaqueries
+
+Add Support for !important
+
+    IMPORTANT_SYM = r'!{w}important'.format(w)
