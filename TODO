@@ -15,3 +15,7 @@ Add Support for At-rules
 Add Support for !important
 
     IMPORTANT_SYM = r'!{w}important'.format(w)
+
+Replace print 'FOUND...' statements with logging.info() statements
+
+Add support to pass an HTML and CSS in at the command line.
