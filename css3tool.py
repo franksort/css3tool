@@ -2,7 +2,7 @@ import ply.lex as lex
 import ply.yacc as yacc
 import re
 from lxml.cssselect import CSSSelector
-from lxml.etree import fromstring
+from lxml.html import fromstring
 
 ###############################
 # Lex                         #
@@ -183,9 +183,9 @@ tokens.append('HASH')
 def t_HASH(t): return t
 t_HASH.__doc__ = r'\#{0}'.format(name)
 
-tokens.append('ATKEYWORD')
-def t_ATKEYWORD(t): return t
-t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
+#tokens.append('ATKEYWORD')
+#def t_ATKEYWORD(t): return t
+#t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
 
 tokens.append('DIMENSION')
 def t_DIMENSION(t): return t
@@ -236,7 +236,7 @@ def t_error(t):
 lex.lex(reflags=re.IGNORECASE, debug=1)
 
 
-f = open('css/style2.css')
+f = open('example/style.css')
 contents = f.read()
 lex.input(contents)
 #lex.input('url(imgs/face01.gif)')
@@ -248,14 +248,12 @@ while True:
 
 
 
-
-
-
 ###############################
 # Yacc                        #
 ###############################
 
 
+blocks = []
 selectors = []
 
 ### Ya know, stylesheet stuff.  The rest of it.
@@ -294,30 +292,35 @@ def p_statements(p):
 
 def p_statement(p):
     """statement : ruleset
-                 | at-rule
     """
+    #            | at-rule
     p[0] = p[1]
     print 'FOUND STATEMENT: {0:s}'.format(p[0])
 
-def p_at_rule(p):
-    """at-rule : ATKEYWORD anys block
-               | ATKEYWORD anys ';'"""
-    p[0] = p[1] + p[2] + p[3] + p[4]
-    print 'FOUND AT RULE: {0:s}'.format(p[0])
 
-def p_block(p):
-    """block : '{' block_term '}'"""
-    p[0] = p[1] + p[2] + p[3]
-    print 'FOUND BLOCK: {0:s}'.format(p[0])
+#def p_at_rule(p):
+#    """at-rule : ATKEYWORD anys block
+#               | ATKEYWORD anys ';'
+#    """
+#    p[0] = reduce(lambda x, y: x+y, p[1:])
+#    print 'FOUND AT RULE: {0:s}'.format(p[0])
 
-def p_block_term(p):
-    """block_term : any
-                  | block
-                  | ATKEYWORD
-                  | ';'
-    """
-    p[0] = reduce(lambda x, y: x+y, p[1:])
-    print 'FOUND BLOCK TERM: {0:s}'.format(p[0])
+#def p_block(p):
+#    """block : '{' block_term '}'
+#             | '{' '}'
+#    """
+#    p[0] = reduce(lambda x, y: x+y, p[1:])
+#    print 'FOUND BLOCK: {0:s}'.format(p[0])
+#    blocks.append(p[0])
+
+#def p_block_term(p):
+#    """block_term : any
+#                  | block
+#                  | ATKEYWORD
+#                  | ';'
+#    """
+#    p[0] = reduce(lambda x, y: x+y, p[1:])
+#    print 'FOUND BLOCK TERM: {0:s}'.format(p[0])
 
 def p_ruleset(p):
     """ruleset : selector_group '{' declarations '}'
@@ -327,12 +330,9 @@ def p_ruleset(p):
     """
     if p[2] == '{':
         selectors.append(p[1])
+        blocks.append(p[3])
     p[0] = reduce(lambda x, y: x+y, p[1:])
     print 'FOUND RULESET: {0:s}'.format(p[0])
-
-#def p_selector(p):
-#    """selector : anys"""
-#    pass
 
 def p_declarations(p):
     """declarations : declaration ';' declarations
@@ -362,9 +362,9 @@ def p_values(p):
 
 def p_value(p):
     """value : any
-             | block
-             | ATKEYWORD
     """
+    #        | block
+    #        | ATKEYWORD
     p[0] = p[1]
     print 'FOUND VALUE: {0:s}'.format(p[0])
 
@@ -608,20 +608,21 @@ while 1:
     yacc.parse(s)
 """
 
-f = open('css/style2.css')
+f = open('example/style.css')
 contents = f.read()
 yacc.parse(contents)
 
+html_file = open('example/index.html')
+html = html_file.read()
+root = fromstring(html)
+
+
 
 for s in selectors:
-    print '&&' + s + '&&'
+    sel = CSSSelector(s)
+    if len(sel(root)) == 0:
+        print '{0} NOT FOUND'.format(s)
 
-sel = CSSSelector('div#container')
-print sel
+#for b in blocks:
+#    print b
 
-html_file = open('html/index.html')
-html = html_file.read()
-
-h = fromstring(html)
-
-print sel(h)
