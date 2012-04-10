@@ -1,15 +1,3 @@
-@media print {
-    body {
-        font-size: 10pt;
-    }
-}
-
-@media screen {
-    body {
-        font-size: 12px;
-    }
-}
-
 body {
     font-family: Helvetica, sans-serif;
     font-size: 1em;
@@ -25,6 +13,10 @@ h1 {
 h2 {
     font-size: 1.5em;
     color: #888;
+}
+
+h1, #whatever {
+    something: else;
 }
 
 #container {

@@ -2,7 +2,7 @@ import ply.lex as lex
 import ply.yacc as yacc
 import re
 from lxml.cssselect import CSSSelector
-from lxml.html import html5parser
+from lxml.html import fromstring
 
 ###############################
 # Lex                         #
@@ -330,6 +330,7 @@ def p_ruleset(p):
     """
     if p[2] == '{':
         selectors.append(p[1])
+        blocks.append(p[3])
     p[0] = reduce(lambda x, y: x+y, p[1:])
     print 'FOUND RULESET: {0:s}'.format(p[0])
 
@@ -361,9 +362,9 @@ def p_values(p):
 
 def p_value(p):
     """value : any
-             | block
-             | ATKEYWORD
     """
+    #        | block
+    #        | ATKEYWORD
     p[0] = p[1]
     print 'FOUND VALUE: {0:s}'.format(p[0])
 
@@ -607,27 +608,21 @@ while 1:
     yacc.parse(s)
 """
 
-f = open('example/atkeyword.css')
+f = open('example/style.css')
 contents = f.read()
 yacc.parse(contents)
 
-
-for s in selectors:
-    print '&&' + s + '&&'
-
-sel = CSSSelector('div#container')
-print sel
-
-
-"""
 html_file = open('example/index.html')
 html = html_file.read()
-
-h = html5parser.fromstring(html)
-print sel(h)
+root = fromstring(html)
 
 
 
-for b in blocks:
-    print b
-"""
+for s in selectors:
+    sel = CSSSelector(s)
+    if len(sel(root)) == 0:
+        print '{0} NOT FOUND'.format(s)
+
+#for b in blocks:
+#    print b
+
