@@ -59,171 +59,93 @@ tokens = []
 #def t_S(t): return t
 #t_S.__doc__ = r'[ \t\r\n\f]+'
 
+def make_simple(name, pattern):
+    global tokens
+    def func(t):
+        return t
+    tokens.append(name)
+    func.__name__ = 't_%s' % name
+    func.__doc__ = pattern
+    return func
+
+def make_unit(name, unit):
+    global tokens
+    def func(t):
+        return t
+    tokens.append(name)
+    func.__name__ = 't_%s' % name
+    func.__doc__ = '%s%s' % (num, unit)
+    return func
+
+
 
 ### Attribute/Value Selectors
 ###
 
-tokens.append('INCLUDES')
-def t_INCLUDES(t): return t
-t_INCLUDES.__doc__ = r'\~='
 
-tokens.append('DASHMATCH')
-def t_DASHMATCH(t): return t
-t_DASHMATCH.__doc__ = r'\|='
-
-tokens.append('PREFIXMATCH')
-def t_PREFIXMATCH(t): return t
-t_PREFIXMATCH.__doc__ = r'\^='
-
-tokens.append('SUFFIXMATCH')
-def t_SUFFIXMATCH(t): return t
-t_SUFFIXMATCH.__doc__ = r'\$='
-
-tokens.append('SUBSTRINGMATCH')
-def t_SUBSTRINGMATCH(t): return t
-t_SUBSTRINGMATCH.__doc__ = r'\*='
-
+t_INCLUDES = make_simple('INCLUDES', r'\~=')
+t_DASHMATCH = make_simple('DASHMATCH', r'\|=')
+t_PREFIXMATCH = make_simple('PREFIXMATCH', r'\^=')
+t_SUFFIXMATCH = make_simple('SUFFIXMATCH', r'\$=')
+t_SUBSTRINGMATCH = make_simple('SUBSTRINGMATCH', r'\*=')
 
 ### Lengths
 ###
 
-tokens.append('EM')
-def t_EM(t): return t
-t_EM.__doc__ = r'{0}em'.format(num)
-
-tokens.append('EX')
-def t_EX(t): return t
-t_EX.__doc__ = r'{0}ex'.format(num)
-
-tokens.append('PIXEL')
-def t_PIXEL(t): return t
-t_PIXEL.__doc__ = r'{0}px'.format(num)
-
-tokens.append('CENTIMETER')
-def t_CENTIMETER(t): return t
-t_CENTIMETER.__doc__ = r'{0}cm'.format(num)
-
-tokens.append('MILLIMETER')
-def t_MILLIMETER(t): return t
-t_MILLIMETER.__doc__ = r'{0}mm'.format(num)
-
-tokens.append('INCH')
-def t_INCH(t): return t
-t_INCH.__doc__ = r'{0}in'.format(num)
-
-tokens.append('POINT')
-def t_POINT(t): return t
-t_POINT.__doc__ = r'{0}pt'.format(num)
-
-tokens.append('PC')
-def t_PC(t): return t
-t_PC.__doc__ = r'{0}pc'.format(num)
+t_EM = make_unit('EM', 'em')
+t_EX = make_unit('EX', 'ex')
+t_PIXEL = make_unit('PIXEL', 'px')
+t_CENTIMETER = make_unit('CENTIMETER', 'cm')
+t_MILLIMETER = make_unit('MILLIMETER', 'mm')
+t_INCH = make_unit('INCH', 'in')
+t_POINT = make_unit('POINT', 'pt')
+t_PC = make_unit('PC', 'pc')
 
 
 ### Angles
 ###
 
-tokens.append('DEG')
-def t_DEG(t): return t
-t_DEG.__doc__ = r'{0}pc'.format(num)
-
-tokens.append('DEGREE')
-def t_DEGREE(t): return t
-t_DEGREE.__doc__ = r'{0}deg'.format(num)
-
-tokens.append('RADIAN')
-def t_RADIAN(t): return t
-t_RADIAN.__doc__ = r'{0}rad'.format(num)
-
-tokens.append('GRADIAN')
-def t_GRADIAN(t): return t
-t_GRADIAN.__doc__ = r'{0}grad'.format(num)
-
+t_DEGREE = make_unit('DEGREE', 'deg')
+t_RADIAN = make_unit('RADIAN', 'rad')
+t_GRADIAN = make_unit('GRADIAN', 'grad')
 
 ### Time
 ###
 
-tokens.append('MILLISECOND')
-def t_MILLISECOND(t): return t
-t_MILLISECOND.__doc__ = r'{0}ms'.format(num)
-
-tokens.append('SECOND')
-def t_SECOND(t): return t
-t_SECOND.__doc__ = r'{0}s'.format(num)
-
+t_MILLISECOND = make_unit('MILLISECOND', 'ms')
+t_SECOND = make_unit('SECOND', 's')
 
 ### Frequency
 ###
 
-tokens.append('HERTZ')
-def t_HERTZ(t): return t
-t_HERTZ.__doc__ = r'{0}Hz'.format(num)
-
-tokens.append('KILOHERTZ')
-def t_KILOHERTZ(t): return t
-t_KILOHERTZ.__doc__ = r'{0}kHz'.format(num)
+t_HERTZ = make_unit('HERTZ', 'Hz')
+t_KILOHERTZ = make_unit('KILOHERTZ', 'kHz')
 
 
 ### Others
 ###
 
-tokens.append('NOT')
-def t_NOT(t): return t
-t_NOT.__doc__ = r'not\('
-
-tokens.append('URI')
-def t_URI(t): return t
-t_URI.__doc__ = r'url\(({0}|{1})\)'.format(string, url)
-
-tokens.append('FUNCTION')
-def t_FUNCTION(t): return t
-t_FUNCTION.__doc__ = r'{0}\('.format(ident)
-
-tokens.append('HASH')
-def t_HASH(t): return t
-t_HASH.__doc__ = r'\#{0}'.format(name)
-
-#tokens.append('ATKEYWORD')
-#def t_ATKEYWORD(t): return t
-#t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
-
-tokens.append('DIMENSION')
-def t_DIMENSION(t): return t
-t_DIMENSION.__doc__ = r'{0}{1}'.format(num, ident)
-
-tokens.append('PERCENTAGE')
-def t_PERCENTAGE(t): return t
-t_PERCENTAGE.__doc__ = r'{0}\%'.format(num)
-
+t_NOT = make_simple('NOT', r'not\(')
+t_URI= make_simple('URI', r'url\(({0}|{1})\)'.format(string, url))
+t_FUNCTION= make_simple('FUNCTION', r'{0}\('.format(ident))
+t_HASH= make_simple('HASH', r'\#{0}'.format(name))
+t_DIMENSION = make_simple('DIMENSION', r'{0}{1}'.format(num, ident))
+t_PERCENTAGE = make_simple('PERCENTAGE', r'{0}\%'.format(num))
 
 ### Comments
 ###
 
-tokens.append('CDO')
-def t_CDO(t): return t
-t_CDO.__doc__ = r'<!--'
-
-tokens.append('CDC')
-def t_CDC(t): return t
-t_CDC.__doc__ = r'-->'
+t_CDO = make_simple('CDO', r'<!--')
+t_CDC = make_simple('CDC', r'-->')
 
 
 ### Basic
 ###
 
-tokens.append('NUMBER')
-def t_NUMBER(t): return t
-t_NUMBER.__doc__ = r'{0}'.format(num)
 
-tokens.append('STRING')
-def t_STRING(t): return t
-t_STRING.__doc__ = r'{0}'.format(string)
-
-tokens.append('IDENT')
-def t_IDENT(t): return t
-t_IDENT.__doc__ = r'{0}'.format(ident)
-
-
+t_NUMBER = make_simple('NUMBER', r'{0}'.format(num))
+t_STRING = make_simple('STRING', r'{0}'.format(string))
+t_IDENT = make_simple('IDENT', r'{0}'.format(ident))
 
 
 t_ignore = ' \t\r\n\f'
@@ -384,7 +306,6 @@ def p_any(p):
            | INCH
            | POINT
            | PC
-           | DEG
            | DEGREE
            | RADIAN
            | GRADIAN
@@ -615,7 +536,6 @@ yacc.parse(contents)
 html_file = open('example/index.html')
 html = html_file.read()
 root = fromstring(html)
-
 
 
 for s in selectors:
