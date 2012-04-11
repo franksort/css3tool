@@ -126,8 +126,8 @@ t_KILOHERTZ = make_unit('KILOHERTZ', 'kHz')
 ###
 
 t_NOT = make_simple('NOT', r'not\(')
-t_URI= make_simple('URI', r'url\(({0}|{1})\)'.format(string, url))
-t_FUNCTION= make_simple('FUNCTION', r'{0}\('.format(ident))
+t_URI = make_simple('URI', r'url\(({0}|{1})\)'.format(string, url))
+t_FUNCTION = make_simple('FUNCTION', r'{0}\('.format(ident))
 t_HASH= make_simple('HASH', r'\#{0}'.format(name))
 t_DIMENSION = make_simple('DIMENSION', r'{0}{1}'.format(num, ident))
 t_PERCENTAGE = make_simple('PERCENTAGE', r'{0}\%'.format(num))
