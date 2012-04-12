@@ -52,6 +52,7 @@ literals = ['|', '*', '[', ']', '=', '+', '>',
 
 tokens = []
 
+
 ### Whitespace
 ###
 
@@ -84,84 +85,41 @@ def t_SUBSTRINGMATCH(t): return t
 t_SUBSTRINGMATCH.__doc__ = r'\*='
 
 
-### Lengths
+### Dimensions
 ###
 
-tokens.append('EM')
-def t_EM(t): return t
-t_EM.__doc__ = r'{0}em'.format(num)
+tokens.append('DIMENSION')
 
-tokens.append('EX')
-def t_EX(t): return t
-t_EX.__doc__ = r'{0}ex'.format(num)
+dimensions = {
+    # Length
+    'em': 'EM',
+    'ex': 'EX',
+    'px': 'PIXEL',
+    'cm': 'CENTIMETER',
+    'mm': 'MILLIMETER',
+    'in': 'INCHES',
+    'pt': 'POINT',
+    'pc': 'PC',
 
-tokens.append('PIXEL')
-def t_PIXEL(t): return t
-t_PIXEL.__doc__ = r'{0}px'.format(num)
+    # Angles
+    'deg': 'DEGREE',
+    'rad': 'RADIAN',
+    'grad': 'GRADIAN',
 
-tokens.append('CENTIMETER')
-def t_CENTIMETER(t): return t
-t_CENTIMETER.__doc__ = r'{0}cm'.format(num)
+    # Time
+    'ms': 'MILLISECOND',
+    's': 'SECOND',
 
-tokens.append('MILLIMETER')
-def t_MILLIMETER(t): return t
-t_MILLIMETER.__doc__ = r'{0}mm'.format(num)
+    # Frequency
+    'Hz': 'HERTZ',
+    'KHz': 'KILOHERTZ',
+}
 
-tokens.append('INCH')
-def t_INCH(t): return t
-t_INCH.__doc__ = r'{0}in'.format(num)
+def t_DIMENSION(t):
+    t.type = dimensions.get(t.value, 'DIMENSION')    
+    return t
 
-tokens.append('POINT')
-def t_POINT(t): return t
-t_POINT.__doc__ = r'{0}pt'.format(num)
-
-tokens.append('PC')
-def t_PC(t): return t
-t_PC.__doc__ = r'{0}pc'.format(num)
-
-
-### Angles
-###
-
-tokens.append('DEG')
-def t_DEG(t): return t
-t_DEG.__doc__ = r'{0}pc'.format(num)
-
-tokens.append('DEGREE')
-def t_DEGREE(t): return t
-t_DEGREE.__doc__ = r'{0}deg'.format(num)
-
-tokens.append('RADIAN')
-def t_RADIAN(t): return t
-t_RADIAN.__doc__ = r'{0}rad'.format(num)
-
-tokens.append('GRADIAN')
-def t_GRADIAN(t): return t
-t_GRADIAN.__doc__ = r'{0}grad'.format(num)
-
-
-### Time
-###
-
-tokens.append('MILLISECOND')
-def t_MILLISECOND(t): return t
-t_MILLISECOND.__doc__ = r'{0}ms'.format(num)
-
-tokens.append('SECOND')
-def t_SECOND(t): return t
-t_SECOND.__doc__ = r'{0}s'.format(num)
-
-
-### Frequency
-###
-
-tokens.append('HERTZ')
-def t_HERTZ(t): return t
-t_HERTZ.__doc__ = r'{0}Hz'.format(num)
-
-tokens.append('KILOHERTZ')
-def t_KILOHERTZ(t): return t
-t_KILOHERTZ.__doc__ = r'{0}kHz'.format(num)
+t_DIMENSION.__doc__ = r'{0}{1}'.format(num, ident)
 
 
 ### Others
@@ -186,11 +144,6 @@ t_HASH.__doc__ = r'\#{0}'.format(name)
 #tokens.append('ATKEYWORD')
 #def t_ATKEYWORD(t): return t
 #t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
-
-tokens.append('DIMENSION')
-def t_DIMENSION(t): return t
-t_DIMENSION.__doc__ = r'{0}{1}'.format(num, ident)
-
 tokens.append('PERCENTAGE')
 def t_PERCENTAGE(t): return t
 t_PERCENTAGE.__doc__ = r'{0}\%'.format(num)
@@ -376,28 +329,12 @@ def p_anys(p):
     print 'FOUND VALUES: {0:s}'.format(p[0])
 
 def p_any(p):
-    """any : EM
-           | EX
-           | PIXEL
-           | CENTIMETER
-           | MILLIMETER
-           | INCH
-           | POINT
-           | PC
-           | DEG
-           | DEGREE
-           | RADIAN
-           | GRADIAN
-           | MILLISECOND
-           | SECOND
-           | HERTZ
-           | KILOHERTZ
+    """any : DIMENSION
            | URI
            | PERCENTAGE
            | IDENT
            | STRING
            | NUMBER
-           | DIMENSION
            | HASH
            | INCLUDES
            | DASHMATCH
