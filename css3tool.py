@@ -3,6 +3,7 @@ import ply.yacc as yacc
 import re
 from lxml.cssselect import CSSSelector
 from lxml.html import fromstring
+from keywords import colors
 
 ###############################
 # Lex                         #
@@ -124,11 +125,6 @@ t_DIMENSION.__doc__ = r'{0}{1}'.format(num, ident)
 
 ### Colors
 ###
-
-tokens.append('HEXCOLOR')
-def t_HEXCOLOR(t): return t
-t_HEXCOLOR.__doc__ = r'\#[0-9a-f]{3,6}'
-
 ### Others
 ###
 
@@ -144,6 +140,10 @@ tokens.append('FUNCTION')
 def t_FUNCTION(t): return t
 t_FUNCTION.__doc__ = r'{0}\('.format(ident)
 
+tokens.append('HEXCOLOR')
+def t_HEXCOLOR(t): return t
+t_HEXCOLOR.__doc__ = r'\#[0-9a-f]{3,6}'
+
 tokens.append('HASH')
 def t_HASH(t): return t
 t_HASH.__doc__ = r'\#{0}'.format(name)
@@ -151,9 +151,13 @@ t_HASH.__doc__ = r'\#{0}'.format(name)
 #tokens.append('ATKEYWORD')
 #def t_ATKEYWORD(t): return t
 #t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
+
 tokens.append('PERCENTAGE')
 def t_PERCENTAGE(t): return t
 t_PERCENTAGE.__doc__ = r'{0}\%'.format(num)
+
+
+
 
 
 ### Comments
@@ -180,6 +184,7 @@ def t_STRING(t): return t
 t_STRING.__doc__ = r'{0}'.format(string)
 
 tokens.append('IDENT')
+tokens.append('COLORKEYWORD')
 tokens.append('BACKGROUND_COLOR')
 
 bg = {
@@ -187,7 +192,12 @@ bg = {
 }
 
 def t_IDENT(t):
-    t.type = bg.get(t.value, 'IDENT')
+    if t.value in colors:
+        t.type = 'COLORKEYWORD'
+    elif t.value in bg:
+        t.type = bg.get(t.value)
+    else:
+        t.type = 'IDENT'
     return t
 
 t_IDENT.__doc__ = r'{0}'.format(ident)
@@ -319,7 +329,9 @@ def p_declaration(p):
     print 'FOUND DECLARATION: {0:s}'.format(p[0])
 
 def p_declaration_background_color(p):
-    """background-color : BACKGROUND_COLOR ':' HASH"""
+    """background-color : BACKGROUND_COLOR ':' HEXCOLOR
+                        | BACKGROUND_COLOR ':' COLORKEYWORD
+    """
     p[0] = reduce(lambda x, y: x+y, p[1:])
     print 'FOUND BACKGROUND COLOR: {0:s}'.format(p[0])
 
@@ -353,6 +365,8 @@ def p_anys(p):
 
 def p_any(p):
     """any : DIMENSION
+           | HEXCOLOR
+           | COLORKEYWORD
            | URI
            | PERCENTAGE
            | IDENT
