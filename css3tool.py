@@ -116,7 +116,7 @@ dimensions = {
 }
 
 def t_DIMENSION(t):
-    t.type = dimensions.get(t.value, 'DIMENSION')    
+    t.type = dimensions.get(t.value, 'DIMENSION')
     return t
 
 t_DIMENSION.__doc__ = r'{0}{1}'.format(num, ident)
@@ -173,7 +173,16 @@ def t_STRING(t): return t
 t_STRING.__doc__ = r'{0}'.format(string)
 
 tokens.append('IDENT')
-def t_IDENT(t): return t
+tokens.append('BACKGROUND_COLOR')
+
+bg = {
+    'background-color': 'BACKGROUND_COLOR',
+}
+
+def t_IDENT(t):
+    t.type = bg.get(t.value, 'IDENT')
+    return t
+
 t_IDENT.__doc__ = r'{0}'.format(ident)
 
 
@@ -296,9 +305,16 @@ def p_declarations(p):
     print 'FOUND DECLARATIONS: {0:s}'.format(p[0])
 
 def p_declaration(p):
-    """declaration : property ':' values"""
-    p[0] = p[1] + p[2] + p[3]
+    """declaration : background-color
+                   | property ':' values
+    """
+    p[0] = reduce(lambda x, y: x+y, p[1:])
     print 'FOUND DECLARATION: {0:s}'.format(p[0])
+
+def p_declaration_background_color(p):
+    """background-color : BACKGROUND_COLOR ':' HASH"""
+    p[0] = reduce(lambda x, y: x+y, p[1:])
+    print 'FOUND BACKGROUND COLOR: {0:s}'.format(p[0])
 
 def p_property(p):
     """property : IDENT"""
