@@ -370,6 +370,7 @@ def p_any(p):
     """any : DIMENSION
            | HEXCOLOR
            | COLORKEYWORD
+           | RGBCOLOR
            | URI
            | PERCENTAGE
            | IDENT
