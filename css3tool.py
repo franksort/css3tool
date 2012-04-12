@@ -122,6 +122,13 @@ def t_DIMENSION(t):
 t_DIMENSION.__doc__ = r'{0}{1}'.format(num, ident)
 
 
+### Colors
+###
+
+tokens.append('HEXCOLOR')
+def t_HEXCOLOR(t): return t
+t_HEXCOLOR.__doc__ = r'\#[0-9a-f]{3,6}'
+
 ### Others
 ###
 
