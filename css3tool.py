@@ -62,28 +62,34 @@ tokens = []
 #t_S.__doc__ = r'[ \t\r\n\f]+'
 
 
+
 ### Attribute/Value Selectors
 ###
 
 tokens.append('INCLUDES')
-def t_INCLUDES(t): return t
-t_INCLUDES.__doc__ = r'\~='
+def t_INCLUDES(t):
+    r'\~='
+    return t
 
 tokens.append('DASHMATCH')
-def t_DASHMATCH(t): return t
-t_DASHMATCH.__doc__ = r'\|='
+def t_DASHMATCH(t):
+    r'\|='
+    return t
 
 tokens.append('PREFIXMATCH')
-def t_PREFIXMATCH(t): return t
-t_PREFIXMATCH.__doc__ = r'\^='
+def t_PREFIXMATCH(t):
+    r'\^='
+    return t
 
 tokens.append('SUFFIXMATCH')
-def t_SUFFIXMATCH(t): return t
-t_SUFFIXMATCH.__doc__ = r'\$='
+def t_SUFFIXMATCH(t):
+    r'\$='
+    return t
 
 tokens.append('SUBSTRINGMATCH')
-def t_SUBSTRINGMATCH(t): return t
-t_SUBSTRINGMATCH.__doc__ = r'\*='
+def t_SUBSTRINGMATCH(t):
+    r'\*='
+    return t
 
 
 ### Dimensions
@@ -160,19 +166,11 @@ def t_PERCENTAGE(t): return t
 t_PERCENTAGE.__doc__ = r'{0}\%'.format(num)
 
 
-
-
-
 ### Comments
 ###
 
-tokens.append('CDO')
-def t_CDO(t): return t
-t_CDO.__doc__ = r'<!--'
-
-tokens.append('CDC')
-def t_CDC(t): return t
-t_CDC.__doc__ = r'-->'
+t_CDO = make_simple('CDO', r'<!--')
+t_CDC = make_simple('CDC', r'-->')
 
 
 ### Basic
@@ -204,8 +202,6 @@ def t_IDENT(t):
     return t
 
 t_IDENT.__doc__ = r'{0}'.format(ident)
-
-
 
 
 t_ignore = ' \t\r\n\f'
@@ -593,7 +589,6 @@ yacc.parse(contents)
 html_file = open('example/index.html')
 html = html_file.read()
 root = fromstring(html)
-
 
 
 for s in selectors:
