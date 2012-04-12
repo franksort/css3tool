@@ -22,6 +22,7 @@ h1, #whatever {
 #container {
     width: 80%;
     margin: 0 auto 0 auto;
+    color: rgb(200, 100, 50);
 }
 
 #notused {

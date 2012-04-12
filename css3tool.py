@@ -123,14 +123,17 @@ def t_DIMENSION(t):
 t_DIMENSION.__doc__ = r'{0}{1}'.format(num, ident)
 
 
-### Colors
-###
 ### Others
 ###
 
 tokens.append('NOT')
 def t_NOT(t): return t
 t_NOT.__doc__ = r'not\('
+
+tokens.append('RGBCOLOR')
+def t_RGBCOLOR(t):
+    r'rgb\(\d{1,3}\s*\,\s*\d{1,3}\s*\,\s*\d{1,3}\)'
+    return t
 
 tokens.append('URI')
 def t_URI(t): return t
