@@ -169,8 +169,15 @@ t_PERCENTAGE.__doc__ = r'{0}\%'.format(num)
 ### Comments
 ###
 
-t_CDO = make_simple('CDO', r'<!--')
-t_CDC = make_simple('CDC', r'-->')
+tokens.append('CDO')
+def t_CDO(t):
+    r'<!--'
+    return t
+
+tokens.append('CDC')
+def t_CDC(t):
+    r'-->'
+    return t
 
 
 ### Basic
