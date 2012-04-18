@@ -5,17 +5,14 @@ body {
     color: #000;
 }
 
-h1 {
-    font-size: 2em;
-    color: #69c;
-}
-
-h2 {
+h2 span {
     font-size: 1.5em;
     color: antiquewhite;
 }
 
 h1, #whatever {
+    font-size: 2em;
+    color: #69c;
     something: else;
 }
 
