@@ -268,7 +268,7 @@ class CSSParser:
         print 'FOUND EXPRESSION {0:s}'.format(p[0])
 
     def p_negation(self, p):
-        """negation : ':' NOT '(' negation_arg ')'"""
+        """negation : ':' NOT negation_arg ')'"""
         p[0] = reduce(lambda x, y: x+y, p[1:])
         print 'FOUND NEGATION: {0:s}'.format(p[0])
 
