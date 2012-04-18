@@ -16,14 +16,13 @@ css3tool requires Python (some version), ply, and lxml.
 
     pip install ply
     pip install lxml
+    pip install argparse
     git clone <project>
 
 Usage
 -----
 
-I don't know yet.  Maybe:
-
-    python css3tool.py --unused <css file> <html file>
+    python css3tool.py <CSS file> <HTML file>
 
 Contributing
 ------------
