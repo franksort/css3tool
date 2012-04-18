@@ -245,7 +245,7 @@ class CSSParser:
         print 'FOUND PSEUDO: {0:s}'.format(p[0])
 
     def p_functional_pseudo(self, p):
-        """functional_pseudo : '(' expressions ')'"""
+        """functional_pseudo : FUNCTION expressions ')'"""
         p[0] = p[1] + p[2] + p[3]
         print 'FOUND PSEUDO FUNCTION: {0:s}'.format(p[0])
 
