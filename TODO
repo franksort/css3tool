@@ -19,3 +19,8 @@ Add Support for !important
 Replace print 'FOUND...' statements with logging.info() statements
 
 Add support to pass an HTML and CSS in at the command line.
+
+Consider finding a better HTML5 parsing engine
+
+    lxml's CSSSelector has many limitations when dealing with
+    to pseudo functions...converting to XPath.
