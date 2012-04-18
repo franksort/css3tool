@@ -5,15 +5,16 @@ from lxml.html import fromstring
 import argparse
 import os.path
 
-def get_unused_selectors(html, css):
+def get_unused_selectors(css, html):
 
     parser = CSSParser()
-    parser.parse(html)
+    parser.parse(css)
     root = fromstring(html)
 
     unused = []
 
     for s in parser.selectors:
+        print s
         sel = CSSSelector(s)
         if len(sel(root)) == 0:
             unused.append(s)
@@ -40,8 +41,8 @@ if __name__ == '__main__':
     except IOError as e:
         argparser.error('{0}'.format(e))
 
-    unused = get_unused_selectors(args.css.read(),
-                                  args.html.read())
+    unused = get_unused_selectors(css=args.css.read(),
+                                  html=args.html.read())
     print 'Unused Selectors:'
     print unused
 
