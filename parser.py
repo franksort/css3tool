@@ -1,5 +1,6 @@
 import ply.yacc as yacc
 from lexer import CSSLexer
+import logging
 
 class CSSParser:
 
@@ -7,10 +8,10 @@ class CSSParser:
     ### Grammar
 
 
-    def __init__(self):
-        self.lexer = CSSLexer()
+    def __init__(self, debug=False):
+        self.lexer = CSSLexer(debug=debug)
         self.tokens = self.lexer.tokens
-        self.parser = yacc.yacc(module=self, debug=True)
+        self.parser = yacc.yacc(module=self, debug=debug)
         self.selectors = []
 
     def parse(self, data):
@@ -25,21 +26,21 @@ class CSSParser:
                       | statements
         """
         p[0] = p[1]
-        print 'FOUND STYLESHEET: {0:s}'.format(p[0])
+        logging.debug('FOUND STYLESHEET: {0}'.format(p[0]))
 
     def p_statements(self, p):
         """statements : statement statements
                       | statement
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND STATEMENTS: {0:s}'.format(p[0])
+        logging.debug('FOUND STATEMENTS: {0}'.format(p[0]))
 
     def p_statement(self, p):
         """statement : ruleset
         """
         #            | at-rule
         p[0] = p[1]
-        print 'FOUND STATEMENT: {0:s}'.format(p[0])
+        logging.debug('FOUND STATEMENT: {0}'.format(p[0]))
 
 
     #def p_at_rule(p):
@@ -73,7 +74,7 @@ class CSSParser:
                    | '{' '}'
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND RULESET: {0:s}'.format(p[0])
+        logging.debug('FOUND RULESET: {0}'.format(p[0]))
 
     def p_declarations(self, p):
         """declarations : declaration ';' declarations
@@ -81,18 +82,18 @@ class CSSParser:
                         | declaration
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND DECLARATIONS: {0:s}'.format(p[0])
+        logging.debug('FOUND DECLARATIONS: {0}'.format(p[0]))
 
     def p_declaration(self, p):
         """declaration : property ':' values"""
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND DECLARATION: {0:s}'.format(p[0])
+        logging.debug('FOUND DECLARATION: {0}'.format(p[0]))
 
 
     def p_property(self, p):
         """property : IDENT"""
         p[0] = p[1]
-        print 'FOUND PROPERTY: {0:s}'.format(p[0])
+        logging.debug('FOUND PROPERTY: {0}'.format(p[0]))
 
     def p_values(self, p):
         """values : value ',' values
@@ -100,14 +101,14 @@ class CSSParser:
                   | value
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND VALUES: {0:s}'.format(p[0])
+        logging.debug('FOUND VALUES: {0}'.format(p[0]))
 
     def p_value(self, p):
         """value : any"""
         #        | block
         #        | ATKEYWORD
         p[0] = p[1]
-        print 'FOUND VALUE: {0:s}'.format(p[0])
+        logging.debug('FOUND VALUE: {0}'.format(p[0]))
 
     def p_anys(self, p):
         """anys : any ',' anys
@@ -115,7 +116,7 @@ class CSSParser:
                 | any
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND VALUES: {0:s}'.format(p[0])
+        logging.debug('FOUND VALUES: {0}'.format(p[0]))
 
     def p_any(self, p):
         """any : DIMENSION
@@ -136,7 +137,7 @@ class CSSParser:
         """
         # UNICODE-RANGE, DELIM
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND ANY: {0:s}'.format(p[0]) 
+        logging.debug('FOUND ANY: {0}'.format(p[0]))
 
 
 
@@ -152,7 +153,7 @@ class CSSParser:
         #                 | selector selector_group
         self.selectors.append(p[1])
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND SELECTOR GROUP: {0:s}'.format(p[0])
+        logging.debug('FOUND SELECTOR GROUP: {0}'.format(p[0]))
 
     def p_selector(self, p):
         """selector : simple_selector_sequence
@@ -160,7 +161,7 @@ class CSSParser:
                     | simple_selector_sequence selector
         """
         p[0] = reduce(lambda x, y: x+' '+y, p[1:])
-        print 'FOUND SELECTOR: {0:s}'.format(p[0])
+        logging.debug('FOUND SELECTOR: {0}'.format(p[0]))
 
     def p_combinator(self, p):
         """combinator : '+'
@@ -169,7 +170,7 @@ class CSSParser:
         """
         # | S
         p[0] = p[1]
-        print 'FOUND COMBINATOR: {0:s}'.format(p[0])
+        logging.debug('FOUND COMBINATOR: {0}'.format(p[0]))
 
     def p_simple_selector_sequence(self, p):
         """simple_selector_sequence : type_selector sss_types
@@ -179,14 +180,14 @@ class CSSParser:
                                     | sss_types
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND SIMPLE SELECTOR SEQUENCE: {0:s}'.format(p[0])
+        logging.debug('FOUND SIMPLE SELECTOR SEQUENCE: {0}'.format(p[0]))
 
     def p_sss_types(self, p):
         """sss_types : sss_type sss_types
                      | sss_type
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND SIMPLE SELECTOR SEQUENCE TYPES: {0:s}'.format(p[0])
+        logging.debug('FOUND SIMPLE SELECTOR SEQUENCE TYPES: {0}'.format(p[0]))
 
     def p_sss_type(self, p):
         """sss_type : HASH
@@ -196,21 +197,21 @@ class CSSParser:
                     | negation
         """
         p[0] = p[1]
-        print 'FOUND SIMPLE SELECTOR SEQUENCE TYPE: {0:s}'.format(p[0])
+        logging.debug('FOUND SIMPLE SELECTOR SEQUENCE TYPE: {0}'.format(p[0]))
 
     def p_type_selector(self, p):
         """type_selector : namespace_prefix element_name
                          | element_name
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND TYPE SELECTOR: {0:s}'.format(p[0])
+        logging.debug('FOUND TYPE SELECTOR: {0}'.format(p[0]))
 
     def p_universal_selector(self, p):
         """universal_selector : namespace_prefix '*'
                               | '*'
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND UNIVERSAL SELECTOR: {0:s}'.format(p[0])
+        logging.debug('FOUND UNIVERSAL SELECTOR: {0}'.format(p[0]))
         
 
     def p_namespace_prefix(self, p):
@@ -219,17 +220,17 @@ class CSSParser:
                             | '|'
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND NAMESPACE PREFIX: {0:s}'.format(p[0])
+        logging.debug('FOUND NAMESPACE PREFIX: {0}'.format(p[0]))
 
     def p_element_name(self, p):
         """element_name : IDENT"""
         p[0] = p[1]
-        print 'FOUND ELEMENT NAME: {0:s}'.format(p[0])
+        logging.debug('FOUND ELEMENT NAME: {0}'.format(p[0]))
 
     def p_class(self, p):
         """class : '.' IDENT"""
         p[0] = p[1] + p[2]
-        print 'FOUND CLASS: {0:s}'.format(p[0])
+        logging.debug('FOUND CLASS: {0}'.format(p[0]))
 
 
     #######################################################
@@ -242,19 +243,19 @@ class CSSParser:
                   | ':' functional_pseudo
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND PSEUDO: {0:s}'.format(p[0])
+        logging.debug('FOUND PSEUDO: {0}'.format(p[0]))
 
     def p_functional_pseudo(self, p):
         """functional_pseudo : FUNCTION expressions ')'"""
         p[0] = p[1] + p[2] + p[3]
-        print 'FOUND PSEUDO FUNCTION: {0:s}'.format(p[0])
+        logging.debug('FOUND PSEUDO FUNCTION: {0}'.format(p[0]))
 
     def p_expressions(self, p):
         """expressions : expression expressions
                        | expression
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND EXPRESSIONS: {0:s}'.format(p[0])
+        logging.debug('FOUND EXPRESSIONS: {0}'.format(p[0]))
 
     def p_expression(self, p):
         """expression : '+'
@@ -263,14 +264,14 @@ class CSSParser:
                       | STRING
                       | IDENT
         """
-    #                 | DIMENSION
+        #             | DIMENSION
         p[0] = p[1]
-        print 'FOUND EXPRESSION {0:s}'.format(p[0])
+        logging.debug('FOUND EXPRESSION {0}'.format(p[0]))
 
     def p_negation(self, p):
         """negation : ':' NOT negation_arg ')'"""
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND NEGATION: {0:s}'.format(p[0])
+        logging.debug('FOUND NEGATION: {0}'.format(p[0]))
 
     def p_negation_arg(self, p):
         """negation_arg : type_selector
@@ -281,7 +282,7 @@ class CSSParser:
                         | pseudo
         """
         p[0] = p[1]
-        print 'FOUND NEGATION ARG: {0}'.format(p[0])
+        logging.debug('FOUND NEGATION ARG: {0}'.format(p[0]))
 
 
     ######################################################
@@ -294,14 +295,14 @@ class CSSParser:
                   | '[' IDENT ']'
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
-        print 'FOUND ATTRIBUTE: {0}'.format(p[0])
+        logging.debug('FOUND ATTRIBUTE: {0}'.format(p[0]))
 
     def p_attrib_value(self, p):
         """attrib_value : attrib_selector_op IDENT
                         | attrib_selector_op STRING
         """
         p[0] = p[1] + p[2]
-        print 'FOUND ATTRIBUTE VALUE: {0}'.format(p[0])
+        logging.debug('FOUND ATTRIBUTE VALUE: {0}'.format(p[0]))
 
     def p_attrib_selector_op(self, p):
         """attrib_selector_op : PREFIXMATCH
@@ -312,7 +313,7 @@ class CSSParser:
                               | DASHMATCH
         """
         p[0] = p[1]
-        print 'FOUND SELECTOR OP: {0}'.format(p[0])
+        logging.debug('FOUND SELECTOR OP: {0}'.format(p[0]))
 
     def p_error(self, p):
-        print "Syntax error at '{0}'".format(p)
+        logging.debug("Syntax error at '{0}'".format(p))

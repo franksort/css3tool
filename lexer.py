@@ -1,5 +1,6 @@
 import ply.lex as lex
 import re
+import logging
 
 class CSSLexer:
     """
@@ -41,8 +42,8 @@ class CSSLexer:
     url = r'([!#$%&*-~]|{0}|{1})+'.format(nonascii, escape)
     num = r'([+-]?[0-9]+|[0-9]*\.[0-9]+)'
 
-    def __init__(self):
-        self.lexer = lex.lex(module=self, reflags=re.IGNORECASE, debug=True)
+    def __init__(self, debug=False):
+        self.lexer = lex.lex(module=self, reflags=re.IGNORECASE, debug=debug)
 
     ############################################################
     #################### Token Definitions #####################
