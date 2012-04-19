@@ -115,13 +115,24 @@ class CSSLexer:
     def t_HASH(self, t): return t
     t_HASH.__doc__ = r'\#{0}'.format(name)
 
-    #tokens.append('ATKEYWORD')
-    #def t_ATKEYWORD(t): return t
-    #t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
-
     tokens.append('PERCENTAGE')
     def t_PERCENTAGE(self, t): return t
     t_PERCENTAGE.__doc__ = r'{0}\%'.format(num)
+
+
+    ############################################################
+    ### At-keywords
+
+    tokens.append('IMPORT_SYM')
+    def t_IMPORT_SYM(self, t):
+        r'\@import'
+        return t
+
+    tokens.append('ATKEYWORD')
+    def t_ATKEYWORD(self, t): return t
+    t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
+
+
 
 
     ############################################################
@@ -165,9 +176,9 @@ class CSSLexer:
         print "Illegal character '{0}'".format(t.value[0])
         t.lexer.skip(1)
     
-    def test(self, data):
+    def debug(self, data):
         self.lexer.input(data)
         while True:
              tok = self.lexer.token()
              if not tok: break
-             print tok
+             logging.debug(tok)

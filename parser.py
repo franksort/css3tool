@@ -9,13 +9,16 @@ class CSSParser:
 
 
     def __init__(self, debug=False):
-        self.lexer = CSSLexer(debug=debug)
+        self.debug = debug
+        self.lexer = CSSLexer(debug=self.debug)
         self.tokens = self.lexer.tokens
         self.parser = yacc.yacc(module=self, debug=debug, write_tables=0)
         self.selectors = []
 
     def parse(self, data):
         if data:
+            if self.debug:
+                self.lexer.debug(data)
             return self.parser.parse(data, self.lexer.lexer)
         else:
             return []
@@ -37,35 +40,35 @@ class CSSParser:
 
     def p_statement(self, p):
         """statement : ruleset
+                     | import
+                    
         """
-        #            | at-rule
         p[0] = p[1]
         logging.debug('FOUND STATEMENT: {0}'.format(p[0]))
 
 
-    #def p_at_rule(p):
-    #    """at-rule : ATKEYWORD anys block
-    #               | ATKEYWORD anys ';'
-    #    """
-    #    p[0] = reduce(lambda x, y: x+y, p[1:])
-    #    print 'FOUND AT RULE: {0:s}'.format(p[0])
+    ##########################################################
+    ### Import
 
-    #def p_block(p):
-    #    """block : '{' block_term '}'
-    #             | '{' '}'
-    #    """
-    #    p[0] = reduce(lambda x, y: x+y, p[1:])
-    #    print 'FOUND BLOCK: {0:s}'.format(p[0])
-    #    blocks.append(p[0])
+    def p_import(self, p):
+        """import : IMPORT_SYM STRING import_term ';'
+                  | IMPORT_SYM STRING ';'
+                  | IMPORT_SYM URI import_term ';'
+                  | IMPORT_SYM URI ';'
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND IMPORT: {0}'.format(p[0]))
 
-    #def p_block_term(p):
-    #    """block_term : any
-    #                  | block
-    #                  | ATKEYWORD
-    #                  | ';'
-    #    """
-    #    p[0] = reduce(lambda x, y: x+y, p[1:])
-    #    print 'FOUND BLOCK TERM: {0:s}'.format(p[0])
+    def p_import_term(self, p):
+        """import_term : IDENT ',' import_term
+                       | IDENT
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND IMPORT TERM: {0}'.format(p[0]))
+
+
+    ##########################################################
+    ### Ruleset
 
     def p_ruleset(self, p):
         """ruleset : selector_group '{' declarations '}'
