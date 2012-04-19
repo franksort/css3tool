@@ -11,7 +11,7 @@ class CSSParser:
     def __init__(self, debug=False):
         self.lexer = CSSLexer(debug=debug)
         self.tokens = self.lexer.tokens
-        self.parser = yacc.yacc(module=self, debug=debug)
+        self.parser = yacc.yacc(module=self, debug=debug, write_tables=0)
         self.selectors = []
 
     def parse(self, data):
