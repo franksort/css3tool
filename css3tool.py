@@ -24,9 +24,7 @@ def get_unused_selectors(css, html):
     root = fromstring(html)
 
     unused = []
-
     for s in parser.selectors:
-        print s
         sel = CSSSelector(s)
         if len(sel(root)) == 0:
             unused.append(s)
@@ -38,10 +36,8 @@ if __name__ == '__main__':
     desc = "                 _                \n" \
            "                '  )           /) \n" \
            "    _  _   _     -( _/_ ______//  \n" \
-           "   (__/_)_/_)_(__ ) (__(_)(_)(/_  \n\n" 
-
-    desc += 'This program takes some CSS and HTML and determines which ' \
-            'CSS selectors are not being used.'
+           "   (__/_)_/_)_(__ ) (__(_)(_)(/_  \n\n" \
+           "   A tool for finding unused CSS3 selectors." \
 
     example = 'example usage:\n' \
               '  python css3tool.py index.html 1.css\n' \
@@ -75,7 +71,7 @@ if __name__ == '__main__':
 
     # HTML string
     html_str = args.html.read()
-    print args.css
+
     # Convert CSS paths provided as arguments to real path if necessary.
     css_paths = []    
     for css_path in args.css:
@@ -94,10 +90,10 @@ if __name__ == '__main__':
     # Remove duplicate paths.
     css_paths = list(set(css_paths))
 
-    print css_paths
-
+    # Each list of unused selectors are stored in a dict
+    # with the CSS file being as the key.
+    # ie. {'/path/to/example.css': ['h1', 'h2']
     result = {}
-
     for css_path in css_paths:
         fh = open(css_path)
         css_str = fh.read()
