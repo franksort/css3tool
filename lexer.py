@@ -128,6 +128,11 @@ class CSSLexer:
         r'\@import'
         return t
 
+    tokens.append('NAMESPACE_SYM')
+    def t_NAMESPACE_SYM(self, t):
+        r'\@namespace'
+        return t
+
     tokens.append('ATKEYWORD')
     def t_ATKEYWORD(self, t): return t
     t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)

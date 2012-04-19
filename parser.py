@@ -41,7 +41,7 @@ class CSSParser:
     def p_statement(self, p):
         """statement : ruleset
                      | import
-                    
+                     | namespace
         """
         p[0] = p[1]
         logging.debug('FOUND STATEMENT: {0}'.format(p[0]))
@@ -66,6 +66,23 @@ class CSSParser:
         p[0] = reduce(lambda x, y: x+y, p[1:])
         logging.debug('FOUND IMPORT TERM: {0}'.format(p[0]))
 
+
+    ##########################################################
+    ### Namespace
+
+#namespace
+#  : NAMESPACE_SYM S* [namespace_prefix S*]? [STRING|URI] S* ';' S*
+#namespace_prefix
+#  : IDENT
+
+    def p_namespace(self, p):
+        """namespace : NAMESPACE_SYM IDENT STRING ';'
+                     | NAMESPACE_SYM IDENT URI ';'
+                     | NAMESPACE_SYM STRING ';'
+                     | NAMESPACE_SYM URI ';'
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND NAMESPACE: {0}'.format(p[0]))
 
     ##########################################################
     ### Ruleset
