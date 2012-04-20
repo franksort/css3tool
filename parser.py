@@ -42,6 +42,7 @@ class CSSParser:
         """statement : ruleset
                      | import
                      | namespace
+                     | page
         """
         p[0] = p[1]
         logging.debug('FOUND STATEMENT: {0}'.format(p[0]))
@@ -70,11 +71,6 @@ class CSSParser:
     ##########################################################
     ### Namespace
 
-#namespace
-#  : NAMESPACE_SYM S* [namespace_prefix S*]? [STRING|URI] S* ';' S*
-#namespace_prefix
-#  : IDENT
-
     def p_namespace(self, p):
         """namespace : NAMESPACE_SYM IDENT STRING ';'
                      | NAMESPACE_SYM IDENT URI ';'
@@ -83,6 +79,23 @@ class CSSParser:
         """
         p[0] = reduce(lambda x, y: x+y, p[1:])
         logging.debug('FOUND NAMESPACE: {0}'.format(p[0]))
+
+
+    ##########################################################
+    ### Page
+
+    def p_page(self, p):
+        """page : PAGE_SYM IDENT pseudo_page '{' declarations '}'
+                | PAGE_SYM pseudo_page '{' declarations '}'
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND PAGE: {0}'.format(p[0]))
+
+    def p_pseudo_page(self, p):
+        """pseudo_page : ':' IDENT"""
+        p[0] = p[1] + p[2]
+        logging.debug('FOUND PSEUDO PAGE: {0}'.format(p[0]))
+
 
     ##########################################################
     ### Ruleset
@@ -108,7 +121,6 @@ class CSSParser:
         """declaration : property ':' values"""
         p[0] = reduce(lambda x, y: x+y, p[1:])
         logging.debug('FOUND DECLARATION: {0}'.format(p[0]))
-
 
     def p_property(self, p):
         """property : IDENT"""

@@ -133,6 +133,11 @@ class CSSLexer:
         r'\@namespace'
         return t
 
+    tokens.append('PAGE_SYM')
+    def t_PAGE_SYM(self, t):
+        r'\@page'
+        return t
+
     tokens.append('ATKEYWORD')
     def t_ATKEYWORD(self, t): return t
     t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)

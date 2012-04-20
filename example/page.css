@@ -1,0 +1,7 @@
+@page ident:pseudo {
+    background-color: #000;
+    color: #000;
+}
+@page :pseudo {
+    background-color: #000;
+}
