@@ -138,6 +138,11 @@ class CSSLexer:
         r'\@page'
         return t
 
+    tokens.append('FONT_FACE_SYM')
+    def t_FONT_FACE_SYM(self, t):
+        r'\@font-face'
+        return t
+
     tokens.append('ATKEYWORD')
     def t_ATKEYWORD(self, t): return t
     t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)

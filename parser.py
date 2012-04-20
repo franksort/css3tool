@@ -43,6 +43,7 @@ class CSSParser:
                      | import
                      | namespace
                      | page
+                     | font-face
         """
         p[0] = p[1]
         logging.debug('FOUND STATEMENT: {0}'.format(p[0]))
@@ -69,7 +70,7 @@ class CSSParser:
 
 
     ##########################################################
-    ### Namespace
+    ### At Rule: namespace
 
     def p_namespace(self, p):
         """namespace : NAMESPACE_SYM IDENT STRING ';'
@@ -82,7 +83,7 @@ class CSSParser:
 
 
     ##########################################################
-    ### Page
+    ### At Rule: page
 
     def p_page(self, p):
         """page : PAGE_SYM IDENT pseudo_page '{' declarations '}'
@@ -98,6 +99,15 @@ class CSSParser:
 
 
     ##########################################################
+    ### At Rule: font-face
+
+    def p_font_face(self, p):
+        """font-face : FONT_FACE_SYM '{' declarations '}'"""
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND FONT FACE: {0}'.format(p[0]))
+
+
+   ##########################################################
     ### Ruleset
 
     def p_ruleset(self, p):
