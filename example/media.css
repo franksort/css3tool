@@ -1,0 +1,6 @@
+@media not print and (color), whatever and something {
+    h3 {
+        background-color: white;
+        color: black;
+    }
+}

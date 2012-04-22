@@ -95,9 +95,9 @@ class CSSLexer:
     ############################################################
     ### Functions
 
-    tokens.append('NOT')
-    def t_NOT(self, t): return t
-    t_NOT.__doc__ = r'not\('
+    tokens.append('NOTFUNC')
+    def t_NOTFUNC(self, t): return t
+    t_NOTFUNC.__doc__ = r'not\('
 
     tokens.append('URI')
     def t_URI(self, t): return t
@@ -143,11 +143,10 @@ class CSSLexer:
         r'\@font-face'
         return t
 
-    tokens.append('ATKEYWORD')
-    def t_ATKEYWORD(self, t): return t
-    t_ATKEYWORD.__doc__ = r'\@{0}'.format(name)
-
-
+    tokens.append('MEDIA_SYM')
+    def t_MEDIA_SYM(self, t):
+        r'\@media'
+        return t
 
 
     ############################################################
@@ -174,6 +173,21 @@ class CSSLexer:
     tokens.append('STRING')
     def t_STRING(self, t): return t
     t_STRING.__doc__ = r'{0}'.format(string)
+
+    tokens.append('ONLY')
+    def t_ONLY(self, t):
+        r'only'
+        return t
+
+    tokens.append('AND')
+    def t_AND(self, t):
+        r'and'
+        return t
+
+    tokens.append('NOT')
+    def t_NOT(self, t):
+        r'not'
+        return t
 
     tokens.append('IDENT')
     def t_IDENT(self, t): return t

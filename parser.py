@@ -44,6 +44,7 @@ class CSSParser:
                      | namespace
                      | page
                      | font-face
+                     | media
         """
         p[0] = p[1]
         logging.debug('FOUND STATEMENT: {0}'.format(p[0]))
@@ -106,8 +107,91 @@ class CSSParser:
         p[0] = reduce(lambda x, y: x+y, p[1:])
         logging.debug('FOUND FONT FACE: {0}'.format(p[0]))
 
+    
+    ##########################################################
+    ### At Rule: media query
 
-   ##########################################################
+    def p_media(self, p):
+        """media : MEDIA_SYM media_query_list '{' ruleset '}'
+                 | MEDIA_SYM media_query_list '{' '}'
+                 | MEDIA_SYM '{' '}'
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND MEDIA LIST: {0}'.format(p[0]))
+
+    def p_media_query_list(self, p):
+        """media_query_list : media_query ',' media_query_list
+                            | media_query
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND MEDIA LIST: {0}'.format(p[0]))
+
+    def p_media_query(self, p):
+        """media_query : ONLY media_expressions
+                       | NOT media_expressions
+                       | media_expressions
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND MEDIA QUERY: {0}'.format(p[0]))
+
+    def p_media_expressions(self, p):
+        """media_expressions : media_expression AND media_expressions
+                             | media_expression
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND MEDIA EXPRESSIONS: {0}'.format(p[0]))
+   
+    def p_media_expression(self, p):
+        """media_expression : '(' IDENT ':' expr ')'
+                            | '(' IDENT ')'
+                            | IDENT
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND MEDIA EXPRESSION: {0}'.format(p[0]))
+
+    def p_expr(self, p):
+        """expr : helper expr
+                | helper
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND EXPR: {0}'.format(p[0]))
+
+    def p_helper(self, p):
+        """helper : ',' term
+                  | '\' term
+                  | term
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND HELPER: {0}'.format(p[0]))
+
+
+    def p_unary_operator(self, p):
+        """unary_operator : '+'
+                          | '-'
+                          |
+        """
+        p[0] = p[1]
+        logging.debug('FOUND UNARY OPERATOR: {0}'.format(p[0]))
+
+    def p_term(self, p):
+        """term : unary_operator NUMBER
+                | unary_operator PERCENTAGE
+                | unary_operator DIMENSION
+                | STRING
+                | IDENT
+                | URI
+                | function
+        """
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND TERM: {0}'.format(p[0]))
+
+    def p_function(self, p):
+        """function : FUNCTION expr ')'"""
+        p[0] = reduce(lambda x, y: x+y, p[1:])
+        logging.debug('FOUND TERM: {0}'.format(p[0]))
+
+
+    ##########################################################
     ### Ruleset
 
     def p_ruleset(self, p):
@@ -311,7 +395,7 @@ class CSSParser:
         logging.debug('FOUND EXPRESSION {0}'.format(p[0]))
 
     def p_negation(self, p):
-        """negation : ':' NOT negation_arg ')'"""
+        """negation : ':' NOTFUNC negation_arg ')'"""
         p[0] = reduce(lambda x, y: x+y, p[1:])
         logging.debug('FOUND NEGATION: {0}'.format(p[0]))
 
