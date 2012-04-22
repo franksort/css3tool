@@ -1,26 +1,10 @@
-Add Support for At-rules
-
-    From http://www.w3.org/TR/css3-syntax:
-
-        IMPORT_SYM = r'\@import'
-        PAGE_SYM = r'\@page'
-        MEDIA_SYM = r'\@media'
-        FONT_FACE_SYM = r'\@font-face'
-        CHARSET_SYM = r'\@charset'
-        NAMESPACE_SYM = r'\@namespace'
-
-    There's a specification for CSS3 Media Queries located here:
-    http://www.w3.org/TR/css3-mediaqueries
+Add Support for @charset
 
 Add Support for !important
 
     IMPORTANT_SYM = r'!{w}important'.format(w)
 
-Replace print 'FOUND...' statements with logging.info() statements
-
-Add support to pass an HTML and CSS in at the command line.
-
 Consider finding a better HTML5 parsing engine
 
     lxml's CSSSelector has many limitations when dealing with
-    to pseudo functions...converting to XPath.
+    pseudo functions.
