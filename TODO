@@ -8,3 +8,5 @@ Consider finding a better HTML5 parsing engine
 
     lxml's CSSSelector has many limitations when dealing with
     pseudo functions.
+
+Rework grammar rules to remove shift/reduce warnings
